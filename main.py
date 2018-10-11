@@ -11,7 +11,7 @@ for api in apigateway.get_rest_apis()['items']:
     for result in results['items']:
         for method in methods:
             try:
-                integration = apigateway.get_integration(restApiId=api['id'], resourceId=result['id'], httpMethod='GET')
+                integration = apigateway.get_integration(restApiId=api['id'], resourceId=result['id'], httpMethod=method)
                 if 's3' in integration['uri']:
                     continue
                 lambda_function = integration['uri'].split('function')[2].split('/')[0]
