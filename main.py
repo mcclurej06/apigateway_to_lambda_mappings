@@ -14,9 +14,7 @@ for api in apigateway.get_rest_apis()['items']:
                 integration = apigateway.get_integration(restApiId=api['id'], resourceId=result['id'], httpMethod=method)
                 if 'lambda' not in integration['uri']:
                     continue
-                lambda_function = integration['uri'].split('function')[2].split('/')[0]
-                lambda_function = lambda_function[0:lambda_function.rfind('_')]
-                lambda_function = lambda_function[1:]
+                lambda_function = integration['uri'].split(':')[-1].split('/')[0]
                 api_data.append({
                     'api_resource': '%s %s' % (method, result['path']),
                     'lambda_function': lambda_function
