@@ -6,7 +6,7 @@ data = dict()
 apigateway = boto3.client('apigateway')
 
 for api in apigateway.get_rest_apis()['items']:
-    api_data = []
+    api_data = {}
     results = apigateway.get_resources(restApiId=api['id'])
     for result in results['items']:
         for method in methods:
@@ -15,10 +15,14 @@ for api in apigateway.get_rest_apis()['items']:
                 if 'lambda' not in integration['uri']:
                     continue
                 lambda_function = integration['uri'].split(':')[-1].split('/')[0]
-                api_data.append({
-                    'api_resource': '%s %s' % (method, result['path']),
-                    'lambda_function': lambda_function
-                })
+                if lambda_function in api_data:
+                    api_data[lambda_function].append('%s %s' % (method, result['path']))
+                else:
+                    api_data[lambda_function] = []
+                #api_data.append({
+                #    'api_resource': '%s %s' % (method, result['path']),
+                #    'lambda_function': lambda_function
+                #})
             except apigateway.exceptions.NotFoundException as e:
                 continue
     data[api['name']] = api_data
