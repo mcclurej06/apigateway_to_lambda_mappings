@@ -15,14 +15,9 @@ for api in apigateway.get_rest_apis()['items']:
                 if 'lambda' not in integration['uri']:
                     continue
                 lambda_function = integration['uri'].split(':')[-1].split('/')[0]
-                if lambda_function in api_data:
-                    api_data[lambda_function].append('%s %s' % (method, result['path']))
-                else:
+                if lambda_function not in api_data:
                     api_data[lambda_function] = []
-                #api_data.append({
-                #    'api_resource': '%s %s' % (method, result['path']),
-                #    'lambda_function': lambda_function
-                #})
+                api_data[lambda_function].append('%s %s' % (method, result['path']))
             except apigateway.exceptions.NotFoundException as e:
                 continue
     data[api['name']] = api_data
