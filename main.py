@@ -7,7 +7,7 @@ apigateway = boto3.client('apigateway')
 
 for api in apigateway.get_rest_apis()['items']:
     api_data = {}
-    results = apigateway.get_resources(restApiId=api['id'])
+    results = apigateway.get_resources(restApiId=api['id'], limit=777)
     for result in results['items']:
         for method in methods:
             try:
